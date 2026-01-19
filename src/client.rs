@@ -454,6 +454,7 @@ impl Client {
         };
         let udp_nat_port = udp.1.map(|x| *x.lock().unwrap()).unwrap_or(0);
         let punch_type = if udp_nat_port > 0 { "UDP" } else { "TCP" };
+        // Force rebuild - get connector ID for debugging
         let my_id = Config::get_id();
         log::info!("=== DEBUG: PunchHoleRequest connector_id = '{}' ===", my_id);
         msg_out.set_punch_hole_request(PunchHoleRequest {
