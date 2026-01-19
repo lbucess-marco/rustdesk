@@ -455,7 +455,7 @@ impl Client {
         let udp_nat_port = udp.1.map(|x| *x.lock().unwrap()).unwrap_or(0);
         let punch_type = if udp_nat_port > 0 { "UDP" } else { "TCP" };
         let my_id = Config::get_id();
-        log::info!("DEBUG: connector_id = '{}'", my_id);
+        log::info!("=== DEBUG: PunchHoleRequest connector_id = '{}' ===", my_id);
         msg_out.set_punch_hole_request(PunchHoleRequest {
             id: peer.to_owned(),
             token: token.to_owned(),
@@ -913,7 +913,7 @@ impl Client {
         .await
         .with_context(|| "Failed to connect to relay server")?;
         let my_id = Config::get_id();
-        log::info!("DEBUG: RequestRelay connector_id = '{}'", my_id);
+        log::info!("=== DEBUG: RequestRelay connector_id = '{}' ===", my_id);
         let mut msg_out = RendezvousMessage::new();
         msg_out.set_request_relay(RequestRelay {
             licence_key: key.to_owned(),
