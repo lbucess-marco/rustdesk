@@ -247,19 +247,23 @@ impl Client {
         (i32, String),
         bool,
     )> {
-        // [V9 ULTRA DEBUG] Log at the VERY START of connection attempt
+        // [V10 COMPILE-TIME VERSION CHECK] This constant MUST be in the binary
+        const BUILD_VERSION: &str = "V10-CONNECTOR-ID-BUILD-2026-01-21-18:30";
+        
+        // [V10 ULTRA DEBUG] Log at the VERY START of connection attempt
         let my_connector_id = Config::get_id();
         eprintln!("\n\n╔════════════════════════════════════════════════════════════╗");
-        eprintln!("║ >>> V9 CONNECTOR_ID = '{}' <<<", my_connector_id);
+        eprintln!("║ >>> BUILD: {} <<<", BUILD_VERSION);
+        eprintln!("║ >>> V10 CONNECTOR_ID = '{}' <<<", my_connector_id);
         eprintln!("║ Peer: {}", peer);
         eprintln!("╚════════════════════════════════════════════════════════════╝\n");
-        log::error!("╔═══ V9 CONNECTOR_ID = '{}' ═══╗ Peer: {}", my_connector_id, peer);
-        log::info!("╔═══ V9 CONNECTOR_ID = '{}' ═══╗ Peer: {}", my_connector_id, peer);
+        log::error!("╔═══ {} | V10 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
+        log::info!("╔═══ {} | V10 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
         // Also write to file directly to bypass any logging system issues
         let _ = std::fs::write(
-            "C:\\rustdesk_v9_debug.txt",
-            format!("V9 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\n", 
-                my_connector_id, peer, std::time::SystemTime::now())
+            "C:\\rustdesk_v10_debug.txt",
+            format!("BUILD: {} | V10 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\n", 
+                BUILD_VERSION, my_connector_id, peer, std::time::SystemTime::now())
         );
         
         if config::is_incoming_only() {
