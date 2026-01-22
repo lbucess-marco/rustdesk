@@ -247,24 +247,27 @@ impl Client {
         (i32, String),
         bool,
     )> {
-        // [V10 COMPILE-TIME VERSION CHECK] This constant MUST be in the binary
-        const BUILD_VERSION: &str = "V10-CONNECTOR-ID-BUILD-2026-01-21-18:30";
+        // [V12 COMPILE-TIME VERSION CHECK] This constant MUST be in the binary
+        const BUILD_VERSION: &str = "V12-CONNECTOR-ID-BUILD-2026-01-22-13:00";
         
-        // [V10 ULTRA DEBUG] Log at the VERY START of connection attempt
+        // [V12 ULTRA DEBUG] Log at the VERY START of connection attempt
         let my_connector_id = Config::get_id();
         eprintln!("\n\n╔════════════════════════════════════════════════════════════╗");
         eprintln!("║ >>> BUILD: {} <<<", BUILD_VERSION);
-        eprintln!("║ >>> V10 CONNECTOR_ID = '{}' <<<", my_connector_id);
+        eprintln!("║ >>> V12 CONNECTOR_ID = '{}' <<<", my_connector_id);
         eprintln!("║ Peer: {}", peer);
         eprintln!("╚════════════════════════════════════════════════════════════╝\n");
-        log::error!("╔═══ {} | V10 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
-        log::info!("╔═══ {} | V10 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
-        // Also write to file directly to bypass any logging system issues
-        let _ = std::fs::write(
-            "C:\\rustdesk_v10_debug.txt",
-            format!("BUILD: {} | V10 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\n", 
-                BUILD_VERSION, my_connector_id, peer, std::time::SystemTime::now())
-        );
+        log::error!("╔═══ {} | V12 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
+        log::info!("╔═══ {} | V12 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
+        // Write to TEMP directory (no admin rights needed)
+        if let Ok(temp_dir) = std::env::var("TEMP") {
+            let log_path = format!("{}\\rustdesk_v12_debug.txt", temp_dir);
+            let _ = std::fs::write(
+                &log_path,
+                format!("BUILD: {} | V12 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\nLog path: {}\n", 
+                    BUILD_VERSION, my_connector_id, peer, std::time::SystemTime::now(), log_path)
+            );
+        }
         
         if config::is_incoming_only() {
             bail!("Incoming only mode");
