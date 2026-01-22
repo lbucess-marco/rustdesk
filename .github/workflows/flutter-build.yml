@@ -95,7 +95,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.checkout-ref || github.ref }}
+          ref: ${{ inputs.checkout-ref || github.ref_name }}
           submodules: recursive
 
       - name: Restore bridge files
