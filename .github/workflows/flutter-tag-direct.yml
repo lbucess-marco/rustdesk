@@ -218,14 +218,26 @@ jobs:
           doNotCache: false
 
       - name: Install vcpkg dependencies
+        shell: pwsh
         env:
           VCPKG_DEFAULT_HOST_TRIPLET: x64-windows-static
         run: |
-          if ! $Env:VCPKG_ROOT/vcpkg install --triplet x64-windows-static --x-install-root="$Env:VCPKG_ROOT/installed" {
+          $vcpkgExe = Join-Path $Env:VCPKG_ROOT 'vcpkg.exe'
+          $installArgs = @(
+            'install',
+            '--triplet', 'x64-windows-static',
+            '--x-install-root', "$Env:VCPKG_ROOT/installed"
+          )
+
+          if (-not (& $vcpkgExe @installArgs)) {
             Get-ChildItem -Path "$Env:VCPKG_ROOT" -Filter *.log -Recurse | ForEach-Object {
-              Write-Host "$_"; Write-Host "======"; Get-Content "$_"; Write-Host "======"; Write-Host
+              Write-Host "$_"
+              Write-Host "======"
+              Get-Content "$_"
+              Write-Host "======"
+              Write-Host
             }
-            exit 1
+            throw "vcpkg install failed"
           }
 
       - name: Force clean build (v4)
