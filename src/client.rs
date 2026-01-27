@@ -248,23 +248,23 @@ impl Client {
         bool,
     )> {
         // [V12 COMPILE-TIME VERSION CHECK] This constant MUST be in the binary
-        const BUILD_VERSION: &str = "V12-CONNECTOR-ID-BUILD-2026-01-22-13:00";
+        const BUILD_VERSION: &str = "V13-CONNECTOR-ID-BUILD-2026-01-27-13:44";
         
         // [V12 ULTRA DEBUG] Log at the VERY START of connection attempt
         let my_connector_id = Config::get_id();
         eprintln!("\n\n╔════════════════════════════════════════════════════════════╗");
         eprintln!("║ >>> BUILD: {} <<<", BUILD_VERSION);
-        eprintln!("║ >>> V12 CONNECTOR_ID = '{}' <<<", my_connector_id);
+        eprintln!("║ >>> V13 CONNECTOR_ID = '{}' <<<", my_connector_id);
         eprintln!("║ Peer: {}", peer);
         eprintln!("╚════════════════════════════════════════════════════════════╝\n");
-        log::error!("╔═══ {} | V12 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
-        log::info!("╔═══ {} | V12 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
+        log::error!("╔═══ {} | V13 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
+        log::info!("╔═══ {} | V13 CONNECTOR_ID = '{}' ═══╗ Peer: {}", BUILD_VERSION, my_connector_id, peer);
         // Write to TEMP directory (no admin rights needed)
         if let Ok(temp_dir) = std::env::var("TEMP") {
-            let log_path = format!("{}\\rustdesk_v12_debug.txt", temp_dir);
+            let log_path = format!("{}\\rustdesk_v13_debug.txt", temp_dir);
             let _ = std::fs::write(
                 &log_path,
-                format!("BUILD: {} | V12 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\nLog path: {}\n", 
+                format!("BUILD: {} | V13 CONNECTOR_ID = '{}' | Peer: {} | Time: {:?}\nLog path: {}\n", 
                     BUILD_VERSION, my_connector_id, peer, std::time::SystemTime::now(), log_path)
             );
         }
