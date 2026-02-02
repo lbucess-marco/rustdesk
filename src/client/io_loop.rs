@@ -218,6 +218,9 @@ impl<T: InvokeUiSession> Remote<T> {
                     crate::rustdesk_interval(time::interval(Duration::new(1, 0)));
                 let mut fps_instant = Instant::now();
 
+                // V15: P2P 연결 종료 알림을 위해 렌데뷰 서버 주소 저장
+                let rendezvous_server_for_p2p_end = rendezvous_server.clone();
+
                 let _keep_it = client::hc_connection(feedback, rendezvous_server, token).await;
 
                 loop {
@@ -319,6 +322,13 @@ impl<T: InvokeUiSession> Remote<T> {
                     }
                 }
                 log::debug!("Exit io_loop of id={}", self.handler.get_id());
+
+                // V15: P2P 연결 종료 시 서버에 알림 (종료 시간 기록용)
+                if direct {
+                    let target_id = self.handler.get_id();
+                    client::notify_p2p_connection_end(&target_id, &rendezvous_server_for_p2p_end).await;
+                }
+
                 // Stop client audio server.
                 if let Some(s) = self.stop_voice_call_sender.take() {
                     s.send(()).ok();
