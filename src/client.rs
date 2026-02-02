@@ -4227,7 +4227,8 @@ pub async fn notify_p2p_connection_end(target_id: &str, rendezvous_server: &str)
         let rendezvous_server = rendezvous_server.to_owned();
         let my_id = my_id.clone();
         async move {
-            match connect_tcp(&rendezvous_server, CONNECT_TIMEOUT).await {
+            let host = check_port(&rendezvous_server, RENDEZVOUS_PORT);
+            match connect_tcp(host, CONNECT_TIMEOUT).await {
                 Ok(mut socket) => {
                     let mut msg_out = RendezvousMessage::new();
                     msg_out.set_p2p_connection_end(P2pConnectionEnd {
