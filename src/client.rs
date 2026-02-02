@@ -248,7 +248,7 @@ impl Client {
         bool,
     )> {
         // [V12 COMPILE-TIME VERSION CHECK] This constant MUST be in the binary
-        const BUILD_VERSION: &str = "V13-CONNECTOR-ID-BUILD-2026-01-27-13:44";
+        const BUILD_VERSION: &str = "V14-CONNECTOR-ID-SEND-2026-02-02-13:12";
         
         // [V12 ULTRA DEBUG] Log at the VERY START of connection attempt
         let my_connector_id = Config::get_id();
@@ -894,12 +894,15 @@ impl Client {
                 relay_server,
                 secure,
             );
+            // V14: connector_id 추가 - 서버로 실제 RustDesk ID 전송
+            let my_id = Config::get_id();
             msg_out.set_request_relay(RequestRelay {
                 id: peer.to_owned(),
                 token: token.to_owned(),
                 uuid: uuid.clone(),
                 relay_server: relay_server.clone(),
                 secure,
+                connector_id: my_id,
                 ..Default::default()
             });
             socket.send(&msg_out).await?;

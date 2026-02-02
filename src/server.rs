@@ -323,9 +323,11 @@ async fn create_relay_connection_(
     .await?;
     let mut msg_out = RendezvousMessage::new();
     let licence_key = crate::get_key(true).await;
+    // V14: connector_id 추가 - 서버로 실제 RustDesk ID 전송
     msg_out.set_request_relay(RequestRelay {
         licence_key,
         uuid,
+        connector_id: crate::Config::get_id(),
         ..Default::default()
     });
     stream.send(&msg_out).await?;

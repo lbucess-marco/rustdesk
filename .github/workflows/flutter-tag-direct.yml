@@ -6,7 +6,7 @@ on:
       branch:
         description: "Branch, tag, or commit SHA to build"
         required: true
-        default: connector-id-feature-v13
+        default: connector-id-feature-v14
       upload-artifact:
         description: "Upload build artifacts"
         type: boolean
