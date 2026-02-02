@@ -327,7 +327,7 @@ async fn create_relay_connection_(
     msg_out.set_request_relay(RequestRelay {
         licence_key,
         uuid,
-        connector_id: crate::Config::get_id(),
+        connector_id: Config::get_id(),
         ..Default::default()
     });
     stream.send(&msg_out).await?;
