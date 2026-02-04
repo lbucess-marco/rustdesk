@@ -4218,37 +4218,31 @@ async fn udp_nat_connect(
 pub async fn notify_p2p_connection_end(target_id: &str, rendezvous_server: &str) {
     let my_id = Config::get_id();
     log::info!(
-        "P2P connection end notification: connector={}, target={}, server={}",
+        "V15 P2P END: connector={}, target={}, server={}",
         my_id, target_id, rendezvous_server
     );
 
-    tokio::spawn({
-        let target_id = target_id.to_owned();
-        let rendezvous_server = rendezvous_server.to_owned();
-        let my_id = my_id.clone();
-        async move {
-            let host = check_port(&rendezvous_server, RENDEZVOUS_PORT);
-            match connect_tcp(host, CONNECT_TIMEOUT).await {
-                Ok(mut socket) => {
-                    let mut msg_out = RendezvousMessage::new();
-                    msg_out.set_p2p_connection_end(P2PConnectionEnd {
-                        connector_id: my_id.clone(),
-                        target_id: target_id.clone(),
-                        ..Default::default()
-                    });
-                    if let Err(e) = socket.send(&msg_out).await {
-                        log::warn!("Failed to send P2P connection end notification: {}", e);
-                    } else {
-                        log::info!(
-                            "P2P connection end notification sent: connector={}, target={}",
-                            my_id, target_id
-                        );
-                    }
-                }
-                Err(e) => {
-                    log::warn!("Failed to connect to rendezvous server for P2P end notification: {}", e);
-                }
+    let host = check_port(rendezvous_server, RENDEZVOUS_PORT);
+    log::info!("V15 P2P END: connecting to host={}", host);
+    match connect_tcp(host, CONNECT_TIMEOUT).await {
+        Ok(mut socket) => {
+            let mut msg_out = RendezvousMessage::new();
+            msg_out.set_p2p_connection_end(P2PConnectionEnd {
+                connector_id: my_id.clone(),
+                target_id: target_id.to_owned(),
+                ..Default::default()
+            });
+            if let Err(e) = socket.send(&msg_out).await {
+                log::warn!("V15 P2P END: send failed: {}", e);
+            } else {
+                log::info!(
+                    "V15 P2P END: sent OK connector={}, target={}",
+                    my_id, target_id
+                );
             }
         }
-    });
+        Err(e) => {
+            log::warn!("V15 P2P END: connect failed: {}", e);
+        }
+    }
 }
